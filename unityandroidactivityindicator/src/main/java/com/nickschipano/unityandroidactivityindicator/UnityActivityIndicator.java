@@ -34,12 +34,27 @@ public class UnityActivityIndicator
             {
                 View view = activity.findViewById(android.R.id.content);
                 ViewGroup vg = (ViewGroup)view;
-                CenterChildProgressBar(vg);
+                SetChildProgressBarGravity(vg, Gravity.CENTER);
             }
         });
     }
 
-    private void CenterChildProgressBar(ViewGroup vg)
+    public void SetGravity(final int g)
+    {
+        final Activity activity = (Activity)_context;
+        activity.runOnUiThread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                View view = activity.findViewById(android.R.id.content);
+                ViewGroup vg = (ViewGroup)view;
+                SetChildProgressBarGravity(vg, g);
+            }
+        });
+    }
+
+    private void SetChildProgressBarGravity(ViewGroup vg, int g)
     {
         final int count = vg.getChildCount();
         for (int i=0; i<count; i++)
@@ -55,13 +70,13 @@ public class UnityActivityIndicator
                 if (lp instanceof FrameLayout.LayoutParams)
                 {
                     FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) v.getLayoutParams();
-                    params.gravity = Gravity.CENTER;
+                    params.gravity = g;
                     v.setLayoutParams(params);
                 }
                 else if (lp instanceof LinearLayout.LayoutParams)
                 {
                     LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) v.getLayoutParams();
-                    params.gravity = Gravity.CENTER;
+                    params.gravity = g;
                     v.setLayoutParams(params);
                 }
                 else {
@@ -73,7 +88,7 @@ public class UnityActivityIndicator
             else if (v instanceof ViewGroup)
             {
                 // we found a ViewGroup, look at its children too
-                CenterChildProgressBar((ViewGroup)v);
+                SetChildProgressBarGravity((ViewGroup)v, g);
             }
         }
     }
